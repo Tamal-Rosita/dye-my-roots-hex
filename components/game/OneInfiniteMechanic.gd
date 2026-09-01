@@ -2,13 +2,13 @@ extends Node
 
 signal completed(gains)
 
-export var base_price = 5
-export var lose_price = 15
-export var min_likeness = 72
-export var price_multiplier = 0.5
+export var base_price: int = 5
+export var lose_price: int = 15
+export var min_likeness: int = 72
+export var price_multiplier: float = 0.5
 
-var gains = 0
-var timer = Timer.new()
+var gains: float = 0
+var timer: Timer = Timer.new()
 
 func _ready():
 	timer.connect("timeout", self, "on_timeout")
@@ -39,6 +39,7 @@ func _on_Dye_completed(likeness):
 		failed()
 	else:
 		won(likeness)
+	SaveSystem.submit_score(SaveSystem.get_player_name(), gains)
 	emit_signal("completed", gains)
 	timer.start()
 

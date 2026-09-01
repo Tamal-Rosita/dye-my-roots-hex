@@ -15,7 +15,7 @@ const dialogues = [
 	"NameColor": "#e2b3d5",
 	"Emotion": "smile",
 	"Pitch": 2.1,
-	"Text": "[rainbow freq=0.15 sat=.3 val=1]Hello!![/rainbow]"
+	"Text": "[rainbow freq=0.15 sat=.3 val=1]Hello, {name}!![/rainbow]"
   },
   {
 	"Name": "Ms Kelly",
@@ -57,6 +57,6 @@ const dialogues = [
 	"NameColor": "#e2b3d5",
 	"Pitch": 2.2,
 	"Emotion": "neutral",
-	"Text": "Are you ready?"
+	"Text": "Are you ready, {name}?"
   }
 ]
