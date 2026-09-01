@@ -2,12 +2,12 @@ extends Control
 
 signal on_ended
 
-export var declaration = "/root/MissKellyDeclaration"
+export var declaration: String = "/root/MissKellyDeclaration"
 
 var dialog
-var ended = false
-var index = 0
-var finished = false
+var ended: bool = false
+var index: int = 0
+var finished: bool = false
 var is_typing
 
 onready var voicebox: ACVoiceBox = $ACVoicebox
@@ -48,9 +48,9 @@ func next_phase() -> void:
 		
 	finished = false
 	var phrase = dialog[index]
-	var name_bbcode = "[color=%s][b] %s [/b][/color]" % [phrase["NameColor"], phrase["Name"]]
+	var name_bbcode: String = "[color=%s][b] %s [/b][/color]" % [phrase["NameColor"], phrase["Name"]]
 	$Phrase/Name.bbcode_text = name_bbcode
-	$Phrase/Text.bbcode_text = phrase["Text"]
+	$Phrase/Text.bbcode_text = phrase["Text"].replace("{name}", _player_name())
 	voicebox.base_pitch = phrase["Pitch"]
 
 	# Call PortraitTexture function with character and emotion as parameters
@@ -66,8 +66,14 @@ func get_dialog() -> Array:
 	else:
 		return []
 
+func _player_name() -> String:
+	var name: String = SaveSystem.get_player_name()
+	if name == "":
+		return "sweetheart"
+	return name
+
 func _on_voicebox_characters_sounded(characters: String):
-	var count = len(characters)
+	var count: int = len(characters)
 	$Phrase/Text.visible_characters += count
 
 func _on_voicebox_finished_phrase():

@@ -1,15 +1,13 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://components/game/Player.gd" type="Script" id=1]
 [ext_resource path="res://sounds/483598__raclure__wrong.mp3" type="AudioStream" id=2]
 [ext_resource path="res://sprites/basics/white-circle-black-outline-4.png" type="Texture" id=3]
 [ext_resource path="res://sprites/basics/white-circle-black-outline-8.png" type="Texture" id=4]
 [ext_resource path="res://sprites/Miss_Kelly.png" type="Texture" id=5]
-[ext_resource path="res://sprites/PAlomita.png" type="Texture" id=6]
 [ext_resource path="res://sprites/basics/64-white_circle.png" type="Texture" id=7]
-[ext_resource path="res://sprites/tache.png" type="Texture" id=8]
-[ext_resource path="res://themes/pixel_theme.tres" type="Theme" id=9]
 [ext_resource path="res://sprites/basics/cloud-32.png" type="Texture" id=10]
+[ext_resource path="res://components/ui/CharRoller.tscn" type="PackedScene" id=11]
 
 [node name="Player" type="Node2D"]
 script = ExtResource( 1 )
@@ -24,8 +22,8 @@ volume_db = 10.0
 pitch_scale = 1.4
 
 [node name="Cloud" type="Sprite" parent="."]
-position = Vector2( -38, -72 )
-scale = Vector2( 1.125, 1.125 )
+position = Vector2( -43, -82 )
+scale = Vector2( 1.5, 1.5 )
 texture = ExtResource( 10 )
 
 [node name="Bubble1" type="Sprite" parent="Cloud"]
@@ -41,37 +39,25 @@ scale = Vector2( 0.888889, 0.888889 )
 texture = ExtResource( 3 )
 
 [node name="Preview" type="Sprite" parent="Cloud"]
-position = Vector2( 0.888889, 3.55556 )
+position = Vector2( 0.888885, 1.77777 )
 scale = Vector2( 0.347222, 0.291667 )
 texture = ExtResource( 7 )
 
-[node name="LineEdit" type="LineEdit" parent="Cloud"]
-margin_left = -11.5556
-margin_top = 2.66669
-margin_right = 106.444
-margin_bottom = 41.6667
+[node name="HexRoller" parent="Cloud" instance=ExtResource( 11 )]
+margin_left = -14.0
+margin_top = -4.0
+margin_right = 130.0
+margin_bottom = 46.0
 rect_scale = Vector2( 0.2, 0.2 )
-theme = ExtResource( 9 )
-max_length = 6
-clear_button_enabled = true
+font_size = 32
+widest_char = "F"
+cell_padding = Vector2( 4, 6 )
+arrow_size = 5.0
+arrow_gap = 2.0
+selected_bg = Color( 0.992157, 0.498039, 0.847059, 0.756863 )
+selected_text = Color( 1, 0.913725, 0.709804, 0.94902 )
+selected_border = Color( 0.937255, 0.972549, 0.529412, 0.705882 )
+dim_text = Color( 0.286275, 0.756863, 0.964706, 1 )
 
-[node name="Good" type="TextureRect" parent="Cloud/LineEdit"]
-anchor_left = 1.0
-anchor_right = 1.0
-margin_left = -20.0
-margin_right = 20.0
-margin_bottom = 40.0
-texture = ExtResource( 6 )
-expand = true
-stretch_mode = 6
-
-[node name="Wrong" type="TextureRect" parent="Cloud/LineEdit"]
-margin_left = 100.0
-margin_right = 140.0
-margin_bottom = 40.0
-texture = ExtResource( 8 )
-expand = true
-stretch_mode = 6
-
-[connection signal="text_changed" from="Cloud/LineEdit" to="." method="_on_LineEdit_text_changed"]
-[connection signal="text_entered" from="Cloud/LineEdit" to="." method="_on_LineEdit_text_entered"]
+[connection signal="confirmed" from="Cloud/HexRoller" to="." method="_on_HexRoller_confirmed"]
+[connection signal="value_changed" from="Cloud/HexRoller" to="." method="_on_HexRoller_value_changed"]

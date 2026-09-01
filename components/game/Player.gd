@@ -7,37 +7,28 @@ func _ready():
 
 func reset():
 	$Cloud.visible = true
-	$Cloud/LineEdit.clear()
-	$Cloud/Preview.self_modulate = Color.whitesmoke
-	$Cloud/LineEdit.add_color_override("font_color", Color.whitesmoke)
-	$Cloud/LineEdit.grab_focus()
+	$Cloud/HexRoller.reset()
 
 func preview(color):
 	$Cloud/Preview.self_modulate = color
-	$Cloud/LineEdit.add_color_override("font_color", color)
 
-func _on_LineEdit_text_changed(new_text):
-	var validation = validate_color(new_text)
-	show_feedback(validation.is_valid)
+func _on_HexRoller_value_changed(hex_value):
+	var validation = validate_color(hex_value)
 	if validation.is_valid:
 		preview(validation.color)
 
-func _on_LineEdit_text_entered(new_text):
-	var validation = validate_color(new_text)
+func _on_HexRoller_confirmed(hex_value):
+	var validation = validate_color(hex_value)
 	if validation.is_valid:
 		emit_signal("submit", validation.color)
 	else:
 		$InvalidStreamPlayer.play()
 
 func validate_color(new_text):
-	var color = Color(new_text)
-	var is_valid_color = not color.is_equal_approx(Color.black)
-	var has_valid_length = len(new_text) == 6
+	var color: Color = Color(new_text)
+	var is_valid_color: bool = not color.is_equal_approx(Color.black)
+	var has_valid_length: bool = len(new_text) == 6
 	return {
 		"is_valid": is_valid_color and has_valid_length, 
 		"color": color
 	}
-
-func show_feedback(is_valid):
-	$Cloud/LineEdit/Good.visible = is_valid
-	$Cloud/LineEdit/Wrong.visible = not is_valid
