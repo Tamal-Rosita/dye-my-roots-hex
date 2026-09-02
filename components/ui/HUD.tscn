@@ -26,3 +26,11 @@ margin_right = -96.0
 margin_bottom = 41.0
 texture = ExtResource( 1 )
 stretch_mode = 6
+
+[node name="Time" type="Label" parent="."]
+margin_left = 900.0
+margin_top = 50.0
+margin_right = 986.0
+margin_bottom = 79.0
+theme = ExtResource( 2 )
+text = "TIME --"

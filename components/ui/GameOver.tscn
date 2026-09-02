@@ -1,0 +1,56 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://themes/pixel_theme.tres" type="Theme" id=1]
+[ext_resource path="res://components/ui/GameOver.gd" type="Script" id=2]
+
+[node name="GameOver" type="Control"]
+visible = false
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 2 )
+
+[node name="Backdrop" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 0.72 )
+
+[node name="Title" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -200.0
+margin_top = -110.0
+margin_right = 200.0
+margin_bottom = -60.0
+theme = ExtResource( 1 )
+text = "TIME'S UP!"
+align = 1
+valign = 1
+
+[node name="FinalGains" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -200.0
+margin_top = -30.0
+margin_right = 200.0
+margin_bottom = 20.0
+theme = ExtResource( 1 )
+text = "You earned $0.00"
+align = 1
+valign = 1
+
+[node name="Hint" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -200.0
+margin_top = -120.0
+margin_right = 200.0
+margin_bottom = -80.0
+theme = ExtResource( 1 )
+text = "PRESS A TO CONTINUE"
+align = 1

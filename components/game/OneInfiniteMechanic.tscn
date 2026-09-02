@@ -37,3 +37,4 @@ streams = [ ExtResource( 5 ), ExtResource( 7 ) ]
 
 [connection signal="submit" from="Player" to="." method="_on_Player_submit"]
 [connection signal="completed" from="Dye" to="." method="_on_Dye_completed"]
+[connection signal="timeout" from="Dye" to="." method="_on_Dye_timeout"]
