@@ -41,6 +41,7 @@ config/icon="res://icon.png"
 
 MissKellyDeclaration="*res://dialogs/Miss_Kelly_Declaration.gd"
 SaveSystem="*res://components/save/SaveSystem.gd"
+Sfx="*res://components/ui/Sfx.gd"
 
 [display]
 
