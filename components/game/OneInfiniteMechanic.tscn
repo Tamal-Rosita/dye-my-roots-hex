@@ -1,11 +1,10 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://components/game/OneInfiniteMechanic.gd" type="Script" id=1]
 [ext_resource path="res://components/game/Dye.tscn" type="PackedScene" id=2]
 [ext_resource path="res://sprites/scenery/chair_mirror.png" type="Texture" id=3]
 [ext_resource path="res://components/game/Player.tscn" type="PackedScene" id=4]
 [ext_resource path="res://sounds/201159__kiddpark__cash-register.mp3" type="AudioStream" id=5]
-[ext_resource path="res://sounds/Timeout.wav" type="AudioStream" id=6]
 [ext_resource path="res://sounds/91920__filipe-chagas__cashierreceiptservo.wav" type="AudioStream" id=7]
 [ext_resource path="res://components/audio/MultipleAudioStreamPlayer.tscn" type="PackedScene" id=8]
 
@@ -29,11 +28,8 @@ scale = Vector2( 4, 4 )
 position = Vector2( 0, -200 )
 scale = Vector2( 4, 4 )
 
-[node name="FailSFXPlayer" parent="." instance=ExtResource( 8 )]
-streams = [ ExtResource( 6 ) ]
-
 [node name="WinSFXPlayer" parent="." instance=ExtResource( 8 )]
-streams = [ ExtResource( 5 ), ExtResource( 7 ) ]
+streams = [ ExtResource( 7 ), ExtResource( 5 ) ]
 
 [connection signal="submit" from="Player" to="." method="_on_Player_submit"]
 [connection signal="completed" from="Dye" to="." method="_on_Dye_completed"]

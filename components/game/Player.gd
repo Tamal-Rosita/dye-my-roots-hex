@@ -29,7 +29,7 @@ func _on_HexRoller_confirmed(hex_value):
 	if validation.is_valid:
 		emit_signal("submit", validation.color)
 	else:
-		$InvalidStreamPlayer.play()
+		Sfx.play("denied")
 
 # Character-based hex validation. Black ("000000") is a perfectly valid color:
 # unlike the old Color()-sentinel approach, validation never depends on the

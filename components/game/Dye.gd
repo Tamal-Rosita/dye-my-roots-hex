@@ -15,6 +15,9 @@ var timer: Timer = Timer.new()
 var max_distance
 var max_value
 var submitted: bool = false
+# Last 3 seconds of the color timer show a 3-2-1 countdown with a beep.
+export var countdown_seconds: int = 3
+var last_countdown: int = -1
 
 func _ready():
 	max_distance = color_distance_rgb(Color.white, Color.black)
@@ -27,10 +30,12 @@ func _ready():
 	
 func _process(_delta):
 	update_clock(wait_time - timer.time_left)
+	_update_countdown()
 	
 func reset():
 	randomize()
 	submitted = false
+	last_countdown = -1
 	set_hair_style()
 	set_hair_color()
 	update_clock(0)
@@ -81,6 +86,25 @@ func update_clock(elapsed):
 	var progress = elapsed / wait_time * max_value
 	$ProgressBar.value = max_value - progress
 
+# Shows "3", "2", "1" during the last seconds of the color timer, beeping once
+# per second so the player knows time is almost up.
+func _update_countdown():
+	if not visible or submitted:
+		$Countdown.visible = false
+		last_countdown = -1
+		return
+	var remaining: float = timer.time_left
+	if remaining <= 0.0 or remaining > countdown_seconds:
+		$Countdown.visible = false
+		last_countdown = -1
+		return
+	var digit: int = int(ceil(remaining))
+	$Countdown.visible = true
+	$Countdown.text = str(digit)
+	if digit != last_countdown:
+		last_countdown = digit
+		Sfx.play("countdown")
+
 func color_distance_rgb(color_a, color_b):
 	var r = color_a.r - color_b.r
 	var g = color_a.g - color_b.g
@@ -89,4 +113,5 @@ func color_distance_rgb(color_a, color_b):
 
 # Color timer expired: request an auto-submit instead of failing the round.
 func on_timeout():
+	Sfx.play("timeout")
 	emit_signal("timeout")

@@ -18,11 +18,14 @@ export var likeness_bonus_per_point: float = 0.2
 # Extra seconds for answering fast, scaled by the color timer still remaining
 # when the guess was submitted (up to this value for instant guesses).
 export var speed_bonus_max: float = 8.0
+# Beep once per second during the last seconds of the session clock.
+export var turn_warning_seconds: float = 5.0
 
 var gains: float = 0
 var timer: Timer = Timer.new()       # short delay between rounds
 var turn_timer: Timer = Timer.new()  # session countdown
 var turn_over: bool = false
+var last_warning_second: int = -1
 
 func _ready():
 	timer.connect("timeout", self, "on_timeout")
@@ -48,7 +51,7 @@ func reset():
 		
 func failed():
 	gains -= stepify(lose_price, 0.01)
-	$FailSFXPlayer.play_all()
+	Sfx.play("fail")
 	print("Failed!")
 	
 func won(likeness):
@@ -59,8 +62,18 @@ func won(likeness):
 
 func _process(_delta):
 	if turn_over or turn_timer.is_stopped():
+		last_warning_second = -1
 		return
-	emit_signal("turn_time_changed", turn_timer.time_left)
+	var remaining: float = turn_timer.time_left
+	emit_signal("turn_time_changed", remaining)
+	# Audible warning in the last seconds of the session clock.
+	if remaining <= turn_warning_seconds and remaining > 0.0:
+		var sec: int = int(ceil(remaining))
+		if sec != last_warning_second:
+			last_warning_second = sec
+			Sfx.play("turn_warning")
+	else:
+		last_warning_second = -1
 
 func on_timeout():
 	if turn_over:
@@ -112,4 +125,5 @@ func _grant_time_bonus(likeness):
 	turn_timer.stop()
 	turn_timer.wait_time = remaining + bonus
 	turn_timer.start()
+	Sfx.play("bonus")
 	print("Turn time bonus: +%.1fs" % bonus)

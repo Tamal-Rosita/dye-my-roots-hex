@@ -70,3 +70,4 @@ valign = 1
 autowrap = true
 
 [connection signal="confirmed" from="NameRoller" to="." method="_on_NameRoller_confirmed"]
+[connection signal="cancelled" from="NameRoller" to="." method="_on_NameRoller_cancelled"]

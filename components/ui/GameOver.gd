@@ -7,7 +7,9 @@ extends Control
 func _on_OneInfiniteMechanic_turn_ended(gains):
 	visible = true
 	$FinalGains.text = "You earned $%.2f" % gains
+	Sfx.play("turn_over")
 
 func _process(_delta):
 	if visible and Input.is_action_just_pressed("ui_accept"):
+		Sfx.play("confirm")
 		get_tree().change_scene("res://components/ui/Landing.tscn")
