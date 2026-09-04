@@ -4,10 +4,23 @@ signal submit(color)
 
 func _ready():
 	$Cloud.visible = false
+	$Cloud/NextPrompt.visible = false
 
 func reset():
 	$Cloud.visible = true
 	$Cloud/HexRoller.reset()
+	$Cloud/NextPrompt.visible = false
+
+# The mechanic locks the roller while the guess result + reaction are shown,
+# so stray button presses cannot submit a color (e.g. an accidental white).
+func set_input_enabled(value: bool):
+	$Cloud/HexRoller.set_input_enabled(value)
+
+func show_next_prompt():
+	$Cloud/NextPrompt.visible = true
+
+func hide_next_prompt():
+	$Cloud/NextPrompt.visible = false
 
 func preview(color):
 	$Cloud/Preview.self_modulate = color

@@ -15,6 +15,8 @@ var skip_hold: float = 0.0
 # Reaction mode: shows a single score-dependent Ms Kelly line after a guess.
 var reaction_active: bool = false
 var reaction_timer: Timer
+# How long a finished reaction stays readable before the panel hides.
+export var reaction_hold_time: float = 1.3
 
 onready var voicebox: ACVoiceBox = $ACVoicebox
 
@@ -25,7 +27,7 @@ func _ready():
 	reaction_timer.one_shot = true
 	# Delay between the voicebox finishing the whole phrase and hiding the
 	# panel, so the completed reaction stays readable for a moment.
-	reaction_timer.wait_time = 1.1
+	reaction_timer.wait_time = reaction_hold_time
 	reaction_timer.connect("timeout", self, "_on_reaction_timeout")
 	add_child(reaction_timer)
 	dialog = get_dialog()
@@ -128,8 +130,10 @@ func _on_voicebox_finished_phrase():
 
 # Shows a single random, likeness-dependent reaction line in the same phrase
 # panel as the intro, spoken by Ms Kelly's voicebox. The panel stays up until
-# the voicebox reports the whole phrase is finished (finished_phrase), which
-# guarantees the full message was revealed before it hides.
+# the voicebox reports the whole phrase is finished (finished_phrase), then
+# remains readable for reaction_hold_time before hiding the whole control.
+# Advancing to the next customer does NOT dismiss it; only the next reaction
+# message replaces it, or it hides on its own after the readability hold.
 func show_reaction(likeness: float):
 	var reaction: Dictionary = Reactions.pick(likeness)
 	voicebox.stop()
