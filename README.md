@@ -17,6 +17,11 @@ also work as a fallback for desktop testing.
 Your name is remembered between sessions, and your best earnings are kept on
 the top-10 leaderboard shown on the title screen (saved to `user://save.json`).
 
+Each session is a race against the clock: the turn timer counts down while you
+serve customers, and **good or fast guesses add time**. If a color timer runs
+out, your current guess is submitted automatically. When the turn timer hits
+zero the session ends and your earnings are recorded.
+
 ## Testimonials
 
 *"Going to Ms Kelly completely changed my life. It was always my dream to be in the beauty industry, but it was not considered a 'real career' to some people in my life. Even though I was very hesitant at first to sign up, after coming up here for a walk threw and meeting Ms Kelly."*

@@ -54,9 +54,14 @@ export(float) var repeat_interval: float = 0.08
 var values = []                 # per-column index into glyphs
 var column: int = 0             # active column
 var font                        # DynamicFont
-var tick_player
 var hold_time: float = 0.0
+var input_enabled: bool = true
 var cell_size: Vector2 = Vector2(0, 0)  # computed in _recompute_layout
+
+# Used by the landing screen to debounce input when this view is opened (so a
+# press that activated the view does not instantly confirm it as well).
+func set_input_enabled(value: bool):
+	input_enabled = value
 
 func _ready():
 	if glyphs.length() == 0:
@@ -64,7 +69,6 @@ func _ready():
 	if pad_glyph == "":
 		pad_glyph = glyphs[0]
 	_setup_font()
-	_setup_tick_player()
 	_recompute_layout()
 	reset()
 
@@ -74,14 +78,6 @@ func _setup_font():
 	if font_data:
 		font.font_data = font_data
 	font.size = font_size
-
-func _setup_tick_player():
-	var generator: AudioStreamGenerator = AudioStreamGenerator.new()
-	generator.mix_rate = 22050
-	generator.buffer_length = 0.2
-	tick_player = AudioStreamPlayer.new()
-	tick_player.stream = generator
-	add_child(tick_player)
 
 func _recompute_layout():
 	var measure: Vector2 = font.get_string_size(widest_char)
@@ -127,16 +123,16 @@ func _glyph_index(ch) -> int:
 
 func _move_column(dir):
 	set_column(column + dir)
-	_play_tick(990.0)
+	Sfx.play("select")
 
 func _step(dir):
 	values[column] = (values[column] + dir + glyphs.length()) % glyphs.length()
 	update()
-	_play_tick(1320.0)
+	Sfx.play("tick")
 	emit_signal("value_changed", get_value())
 
 func _process(delta):
-	if not is_visible_in_tree():
+	if not is_visible_in_tree() or not input_enabled:
 		return
 	if Input.is_action_just_pressed("ui_left"):
 		_move_column(-1)
@@ -159,8 +155,10 @@ func _process(delta):
 	else:
 		hold_time = 0.0
 	if Input.is_action_just_pressed("ui_accept"):
+		Sfx.play("confirm")
 		emit_signal("confirmed", get_value())
 	if Input.is_action_just_pressed("ui_cancel"):
+		Sfx.play("cancel")
 		emit_signal("cancelled")
 
 func _draw():
@@ -200,23 +198,3 @@ func _draw_glyph(fnt, text: String, center: Vector2, color: Color):
 	var size: Vector2 = fnt.get_string_size(text)
 	var pos: Vector2 = center - Vector2(size.x * 0.5, fnt.get_height() * 0.5)
 	draw_string(fnt, pos, text, color)
-
-# Tiny synthesized arcade "tick" so scrolling the wheels feels responsive
-# without needing new audio assets.
-func _play_tick(freq):
-	if not tick_player:
-		return
-	var playback = tick_player.get_stream_playback()
-	if not playback or not playback.has_method("push_frame"):
-		return
-	if playback.has_method("clear_buffer"):
-		playback.clear_buffer()
-	var mix_rate: int = 22050
-	var frame_count: int = int(mix_rate * 0.05)
-	for i in range(frame_count):
-		var t: float = float(i) / mix_rate
-		var v: float = -0.2
-		if int(t * freq * 2) % 2 == 0:
-			v = 0.2
-		var envelope: float = 1.0 - float(i) / frame_count
-		playback.push_frame(Vector2(v * envelope, v * envelope))

@@ -1,11 +1,15 @@
 extends Node
 
-# Persistent player profile + high-score table, stored as JSON under user://.
+# Persistent player profile + high-score table + settings, stored as JSON
+# under user://.
 #
 #   SaveSystem.get_player_name()      -> String
 #   SaveSystem.set_player_name(name)  -> saves immediately
 #   SaveSystem.submit_score(name, n)  -> keeps top 10 (best score per name)
 #   SaveSystem.get_high_scores()      -> [{ "name": ..., "score": ... }, ...]
+#   SaveSystem.get_setting(key)       -> float (0..1), e.g. "master"/"sfx"/"music"
+#   SaveSystem.set_setting(key, v)    -> stores, applies and saves
+#   SaveSystem.erase_data()           -> clears name + high scores (keeps settings)
 #
 # All file access is best-effort: if user:// is not writable (e.g. a
 # read-only filesystem on some cabinets) the game simply keeps everything in
@@ -14,13 +18,26 @@ extends Node
 const SAVE_PATH: String = "user://save.json"
 const MAX_SCORES: int = 10
 
+const DEFAULT_SETTINGS: Dictionary = {
+	"master": 1.0,
+	"sfx": 1.0,
+	"music": 1.0
+}
+
 var data: Dictionary = {
 	"player_name": "",
-	"high_scores": []
+	"high_scores": [],
+	"settings": {}
 }
 
 func _ready():
 	load_data()
+	_ensure_defaults()
+
+func _ensure_defaults():
+	for key in DEFAULT_SETTINGS:
+		if not data["settings"].has(key):
+			data["settings"][key] = DEFAULT_SETTINGS[key]
 
 func load_data():
 	var file: File = File.new()
@@ -36,6 +53,8 @@ func load_data():
 		data["player_name"] = parsed["player_name"]
 	if parsed.has("high_scores") and typeof(parsed["high_scores"]) == TYPE_ARRAY:
 		data["high_scores"] = parsed["high_scores"]
+	if parsed.has("settings") and typeof(parsed["settings"]) == TYPE_DICTIONARY:
+		data["settings"] = parsed["settings"]
 
 func save_data():
 	var file: File = File.new()
@@ -73,3 +92,21 @@ func submit_score(name: String, score: float):
 
 func _sort_scores(a, b) -> bool:
 	return float(a["score"]) > float(b["score"])
+
+# ---- settings --------------------------------------------------------------
+
+func get_setting(key: String) -> float:
+	return float(data["settings"].get(key, 1.0))
+
+func set_setting(key: String, value: float):
+	data["settings"][key] = clamp(value, 0.0, 1.0)
+	Sfx.apply_volumes()
+	save_data()
+
+# ---- erase ------------------------------------------------------------------
+
+# Clears the player name and the high-score table (keeps volume settings).
+func erase_data():
+	data["player_name"] = ""
+	data["high_scores"] = []
+	save_data()

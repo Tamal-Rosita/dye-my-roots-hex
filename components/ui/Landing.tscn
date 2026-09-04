@@ -1,16 +1,20 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://components/ui/Logo.tscn" type="PackedScene" id=1]
 [ext_resource path="res://components/ui/UserInfo.tscn" type="PackedScene" id=2]
 [ext_resource path="res://components/ui/Landing.gd" type="Script" id=3]
 [ext_resource path="res://components/ui/AnimatedBackground.tscn" type="PackedScene" id=4]
-[ext_resource path="res://components/ui/Leaderboard.tscn" type="PackedScene" id=5]
+[ext_resource path="res://components/ui/MainMenu.tscn" type="PackedScene" id=5]
+[ext_resource path="res://components/ui/HighScoresView.tscn" type="PackedScene" id=6]
+[ext_resource path="res://components/ui/CreditsView.tscn" type="PackedScene" id=7]
+[ext_resource path="res://components/ui/AttractMode.tscn" type="PackedScene" id=8]
+[ext_resource path="res://components/ui/SoundLibrary.tscn" type="PackedScene" id=9]
+[ext_resource path="res://components/ui/SettingsView.tscn" type="PackedScene" id=10]
+[ext_resource path="res://components/ui/ConfirmPrompt.tscn" type="PackedScene" id=11]
 
 [node name="Landing" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 1.0
-margin_right = 1.0
 script = ExtResource( 3 )
 
 [node name="AnimatedBackground" parent="." instance=ExtResource( 4 )]
@@ -22,18 +26,59 @@ margin_right = 200.0
 margin_bottom = 50.0
 rect_scale = Vector2( 1.2, 1.2 )
 
+[node name="MainMenu" parent="." instance=ExtResource( 5 )]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -150.0
+margin_top = 60.0
+margin_right = 150.0
+margin_bottom = 284.0
+
+[node name="ExtrasMenu" parent="." instance=ExtResource( 5 )]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -150.0
+margin_top = 100.0
+margin_right = 150.0
+margin_bottom = 292.0
+options = [ "Sound Test", "Settings", "Erase Data", "Back" ]
+row_height = 48.0
+
 [node name="UserInfo" parent="." instance=ExtResource( 2 )]
-margin_left = 0.0
-margin_top = 0.0
-margin_right = 0.0
-margin_bottom = 0.0
+visible = false
 
-[node name="Leaderboard" parent="." instance=ExtResource( 5 )]
-anchor_left = 1.0
-anchor_bottom = 0.0
-margin_left = -330.0
-margin_top = 20.0
-margin_right = -20.0
-margin_bottom = 360.0
+[node name="HighScoresView" parent="." instance=ExtResource( 6 )]
+visible = false
 
+[node name="SettingsView" parent="." instance=ExtResource( 10 )]
+visible = false
+
+[node name="CreditsView" parent="." instance=ExtResource( 7 )]
+visible = false
+
+[node name="SoundLibrary" parent="." instance=ExtResource( 9 )]
+visible = false
+
+[node name="ConfirmPrompt" parent="." instance=ExtResource( 11 )]
+visible = false
+prompt_text = "Erase username and high scores? This cannot be undone."
+
+[node name="AttractMode" parent="." instance=ExtResource( 8 )]
+visible = false
+
+[connection signal="option_selected" from="MainMenu" to="." method="_on_MainMenu_option_selected"]
+[connection signal="cancelled" from="ExtrasMenu" to="." method="_on_ExtrasMenu_cancelled"]
+[connection signal="option_selected" from="ExtrasMenu" to="." method="_on_ExtrasMenu_option_selected"]
+[connection signal="cancelled" from="UserInfo" to="." method="_on_UserInfo_cancelled"]
 [connection signal="entered" from="UserInfo" to="." method="_on_UserInfo_entered"]
+[connection signal="back" from="HighScoresView" to="." method="_on_HighScoresView_back"]
+[connection signal="back" from="SettingsView" to="." method="_on_SettingsView_back"]
+[connection signal="back" from="CreditsView" to="." method="_on_CreditsView_back"]
+[connection signal="back" from="SoundLibrary" to="." method="_on_SoundLibrary_back"]
+[connection signal="cancelled" from="ConfirmPrompt" to="." method="_on_ConfirmPrompt_cancelled"]
+[connection signal="confirmed" from="ConfirmPrompt" to="." method="_on_ConfirmPrompt_confirmed"]
