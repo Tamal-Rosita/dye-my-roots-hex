@@ -28,8 +28,40 @@ var sounds: Dictionary = {
 var players: Dictionary = {}
 
 func _ready():
+	# Buses: SFX for generated effects, Music for background tracks.
+	_ensure_bus("SFX")
+	_ensure_bus("Music")
 	for name in sounds:
 		players[name] = _make_player()
+	apply_volumes()
+
+func _ensure_bus(bus_name: String):
+	if AudioServer.get_bus_index(bus_name) == -1:
+		AudioServer.add_bus()
+		AudioServer.set_bus_name(AudioServer.bus_count - 1, bus_name)
+
+# Reads the persisted volume settings (SaveSystem) and applies them to the
+# Master/SFX/Music buses.
+func apply_volumes():
+	var master: float = 1.0
+	var sfx: float = 1.0
+	var music: float = 1.0
+	if SaveSystem:
+		master = SaveSystem.get_setting("master")
+		sfx = SaveSystem.get_setting("sfx")
+		music = SaveSystem.get_setting("music")
+	AudioServer.set_bus_volume_db(0, _volume_to_db(master))
+	var sfx_bus: int = AudioServer.get_bus_index("SFX")
+	var music_bus: int = AudioServer.get_bus_index("Music")
+	if sfx_bus != -1:
+		AudioServer.set_bus_volume_db(sfx_bus, _volume_to_db(sfx * master))
+	if music_bus != -1:
+		AudioServer.set_bus_volume_db(music_bus, _volume_to_db(music * master))
+
+func _volume_to_db(volume: float) -> float:
+	if volume <= 0.001:
+		return -80.0
+	return linear2db(clamp(volume, 0.0, 1.0))
 
 func _make_player():
 	var generator: AudioStreamGenerator = AudioStreamGenerator.new()
@@ -37,6 +69,7 @@ func _make_player():
 	generator.buffer_length = 0.5
 	var player: AudioStreamPlayer = AudioStreamPlayer.new()
 	player.stream = generator
+	player.bus = "SFX"
 	add_child(player)
 	return player
 

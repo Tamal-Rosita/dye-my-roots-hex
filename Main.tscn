@@ -36,6 +36,7 @@ turn_time = 90.0
 
 [node name="GameOver" parent="." instance=ExtResource( 7 )]
 
+[connection signal="exit_requested" from="HUD" to="." method="_on_HUD_exit_requested"]
 [connection signal="completed" from="OneInfiniteMechanic" to="HUD" method="_on_OneInfiniteMechanic_completed"]
 [connection signal="turn_ended" from="OneInfiniteMechanic" to="GameOver" method="_on_OneInfiniteMechanic_turn_ended"]
 [connection signal="turn_time_changed" from="OneInfiniteMechanic" to="HUD" method="_on_OneInfiniteMechanic_turn_time_changed"]

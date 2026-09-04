@@ -8,7 +8,6 @@ size = 24
 font_data = ExtResource( 2 )
 
 [node name="CreditsView" type="Control"]
-visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
@@ -40,7 +39,17 @@ Jaime Hernandez
 Made with Godot 3.5
 
 Global Game Jawn 2023[/center]"
-text = "CREDITS"
+text = "CREDITS
+
+Game Design / 2D Art
+Sakbe Corona
+
+Programming
+Jaime Hernandez
+
+Made with Godot 3.5
+
+Global Game Jawn 2023"
 scroll_active = false
 
 [node name="Hint" type="Label" parent="."]

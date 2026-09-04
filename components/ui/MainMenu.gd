@@ -1,11 +1,12 @@
 extends Control
 
 signal option_selected(index)
+signal cancelled
 
 # Simple arcade menu: UP/DOWN (or mouse) to move, A/ENTER / left-click to
 # activate. Options are shown as labels; the selected one is highlighted.
 
-export(Array, String) var options: Array = ["Start Game", "High Scores", "Credits", "Sound Test"]
+export(Array, String) var options: Array = ["Start Game", "High Scores", "Credits", "Extras"]
 export(Color) var selected_color: Color = Color(0.886, 0.702, 0.835)
 export(Color) var normal_color: Color = Color(0.9, 0.9, 0.9)
 export(float) var row_height: float = 56.0
@@ -55,6 +56,9 @@ func _process(_delta):
 		_selection(1)
 	if Input.is_action_just_pressed("ui_accept"):
 		_activate(selected)
+	if Input.is_action_just_pressed("ui_cancel"):
+		Sfx.play("cancel")
+		emit_signal("cancelled")
 
 func _selection(dir):
 	selected = (selected + dir + options.size()) % options.size()

@@ -83,6 +83,14 @@ func on_timeout():
 func _on_turn_timeout():
 	end_turn()
 
+# Leaves the current session (hold-cancel in the HUD) and returns to the
+# title screen. Earnings are recorded first.
+func quit_to_title():
+	if not turn_over:
+		SaveSystem.submit_score(SaveSystem.get_player_name(), gains)
+	$Dye.stop()
+	get_tree().change_scene("res://components/ui/Landing.tscn")
+
 func end_turn():
 	if turn_over:
 		return

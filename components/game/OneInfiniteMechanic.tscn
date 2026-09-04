@@ -30,6 +30,7 @@ scale = Vector2( 4, 4 )
 
 [node name="WinSFXPlayer" parent="." instance=ExtResource( 8 )]
 streams = [ ExtResource( 7 ), ExtResource( 5 ) ]
+bus_name = "SFX"
 
 [connection signal="submit" from="Player" to="." method="_on_Player_submit"]
 [connection signal="completed" from="Dye" to="." method="_on_Dye_completed"]

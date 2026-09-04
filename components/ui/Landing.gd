@@ -1,5 +1,12 @@
 extends Node
 
+# Title screen state machine: exactly one view is visible at any time, plus
+# the optional attract overlay on top of the main menu.
+#
+#   MainMenu:      Start Game | High Scores | Credits | Extras
+#   ExtrasMenu:    Sound Test | Settings | Erase Data | Back
+#   (Extras is itself a MainMenu instance with its own options)
+
 export var attract_delay: float = 15.0
 
 const INPUT_GRACE_TIME: float = 0.15
@@ -28,30 +35,39 @@ func _process(delta):
 func _current_view():
 	if $MainMenu.visible:
 		return $MainMenu
+	if $ExtrasMenu.visible:
+		return $ExtrasMenu
 	if $UserInfo.visible:
 		return $UserInfo
 	if $HighScoresView.visible:
 		return $HighScoresView
+	if $SettingsView.visible:
+		return $SettingsView
 	if $CreditsView.visible:
 		return $CreditsView
 	if $SoundLibrary.visible:
 		return $SoundLibrary
+	if $ConfirmPrompt.visible:
+		return $ConfirmPrompt
 	return null
 
 # Exactly one view is visible at any time (plus the optional attract overlay
-# on top of the menu), so no panel ever leaves the main menu active under it.
+# on top of the menu), so no panel ever leaves another view active under it.
 #
 # Every opened view gets a short input grace: the button press that activated
 # it (e.g. A on "Start Game") is still "just pressed" for the rest of that
 # frame, so without the grace the name roller would instantly confirm the
 # pre-filled name, any-button back screens would instantly close again, and
-# the menu could re-select an option. This debounce prevents all of that.
+# menus could re-select an option. This debounce prevents all of that.
 func _show_view(node):
 	$MainMenu.visible = node == $MainMenu
+	$ExtrasMenu.visible = node == $ExtrasMenu
 	$UserInfo.visible = node == $UserInfo
 	$HighScoresView.visible = node == $HighScoresView
+	$SettingsView.visible = node == $SettingsView
 	$CreditsView.visible = node == $CreditsView
 	$SoundLibrary.visible = node == $SoundLibrary
+	$ConfirmPrompt.visible = node == $ConfirmPrompt
 	$AttractMode.hide_attract()
 	if node == $HighScoresView:
 		$HighScoresView.refresh()
@@ -97,6 +113,8 @@ func _any_input() -> bool:
 		or Input.is_action_just_pressed("ui_left")
 		or Input.is_action_just_pressed("ui_right"))
 
+# ---- main menu --------------------------------------------------------------
+
 func _on_MainMenu_option_selected(index):
 	match index:
 		0: # Start Game
@@ -105,17 +123,46 @@ func _on_MainMenu_option_selected(index):
 			_show_view($HighScoresView)
 		2: # Credits
 			_show_view($CreditsView)
-		3: # Sound Test (dev tool)
-			_show_view($SoundLibrary)
+		3: # Extras
+			_show_view($ExtrasMenu)
 
 func _on_HighScoresView_back():
+	_show_view($MainMenu)
+
+# ---- Extras submenu ---------------------------------------------------------
+
+func _on_ExtrasMenu_option_selected(index):
+	match index:
+		0: # Sound Test
+			_show_view($SoundLibrary)
+		1: # Settings
+			_show_view($SettingsView)
+		2: # Erase Data
+			_show_view($ConfirmPrompt)
+		3: # Back to the main menu
+			_show_view($MainMenu)
+
+func _on_ExtrasMenu_cancelled():
 	_show_view($MainMenu)
 
 func _on_CreditsView_back():
 	_show_view($MainMenu)
 
 func _on_SoundLibrary_back():
-	_show_view($MainMenu)
+	_show_view($ExtrasMenu)
+
+func _on_SettingsView_back():
+	_show_view($ExtrasMenu)
+
+func _on_ConfirmPrompt_confirmed():
+	SaveSystem.erase_data()
+	print("[Landing] user data erased")
+	_show_view($ExtrasMenu)
+
+func _on_ConfirmPrompt_cancelled():
+	_show_view($ExtrasMenu)
+
+# ---- name entry --------------------------------------------------------------
 
 func _on_UserInfo_cancelled():
 	_show_view($MainMenu)
