@@ -12,12 +12,22 @@ var is_typing
 # Hold-cancel skip: filling the ring for this long ends the sequence.
 export var skip_hold_time: float = 1.0
 var skip_hold: float = 0.0
+# Reaction mode: shows a single score-dependent Ms Kelly line after a guess.
+var reaction_active: bool = false
+var reaction_timer: Timer
 
 onready var voicebox: ACVoiceBox = $ACVoicebox
 
 func _ready():
 	voicebox.connect("characters_sounded", self, "_on_voicebox_characters_sounded")
 	voicebox.connect("finished_phrase", self, "_on_voicebox_finished_phrase")
+	reaction_timer = Timer.new()
+	reaction_timer.one_shot = true
+	# Delay between the voicebox finishing the whole phrase and hiding the
+	# panel, so the completed reaction stays readable for a moment.
+	reaction_timer.wait_time = 1.1
+	reaction_timer.connect("timeout", self, "_on_reaction_timeout")
+	add_child(reaction_timer)
 	dialog = get_dialog()
 	assert(dialog, "Dialog not found")
 	$HoldSkip.set_label("HOLD\nTO SKIP")
@@ -52,6 +62,9 @@ func end():
 	$HoldSkip.visible = false
 	emit_signal("on_ended")
 	clear()
+	# The dialogue is only shown while there is something to say: hide the
+	# whole control once the intro is done (and after each reaction).
+	visible = false
 
 # Silences the voicebox completely: clears the remaining letters AND stops the
 # currently playing one (a bare stop() used to leave the queue speaking).
@@ -105,5 +118,32 @@ func _on_voicebox_characters_sounded(characters: String):
 
 func _on_voicebox_finished_phrase():
 	$Phrase/Text.visible_characters = len($Phrase/Text.text)
+	if reaction_active:
+		# The whole reaction was spoken and revealed: keep it visible briefly,
+		# then hide the entire dialogue control (see _on_reaction_timeout).
+		reaction_timer.start()
+		return
 	finished = true
 	index += 1
+
+# Shows a single random, likeness-dependent reaction line in the same phrase
+# panel as the intro, spoken by Ms Kelly's voicebox. The panel stays up until
+# the voicebox reports the whole phrase is finished (finished_phrase), which
+# guarantees the full message was revealed before it hides.
+func show_reaction(likeness: float):
+	var reaction: Dictionary = Reactions.pick(likeness)
+	voicebox.stop()
+	reaction_timer.stop()
+	reaction_active = true
+	visible = true
+	$Phrase/Name.bbcode_text = "[color=#e2b3d5][b] Ms Kelly [/b][/color]"
+	$Phrase/Text.bbcode_text = reaction["text"]
+	$Phrase/Text.visible_characters = 0
+	voicebox.base_pitch = reaction["pitch"]
+	$Background/PortraitTexture.set_emotion(declaration, reaction["emotion"])
+	voicebox.play_string($Phrase/Text.text)
+
+func _on_reaction_timeout():
+	reaction_active = false
+	clear()
+	visible = false

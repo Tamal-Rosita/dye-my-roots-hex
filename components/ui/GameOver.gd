@@ -4,9 +4,11 @@ extends Control
 # Shown when the session (turn) timer expires; press A to return to the title
 # screen (the leaderboard there reflects the session that just ended).
 
+const GOLD: String = "#ffd166"
+
 func _on_OneInfiniteMechanic_turn_ended(gains):
 	visible = true
-	$FinalGains.text = "You earned $%.2f" % gains
+	$FinalGains.bbcode_text = "[center][color=#f2e5f0]YOU EARNED[/color]\n[color=%s]$%.2f[/color][/center]" % [GOLD, gains]
 	Sfx.play("turn_over")
 
 func _process(_delta):

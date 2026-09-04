@@ -36,12 +36,14 @@ config/name="Dye my Roots HEX"
 config/description="Help Ms Kelly to fade non-dyed hair roots."
 run/main_scene="res://components/ui/Landing.tscn"
 config/icon="res://icon.png"
+config/version="0.4.1"
 
 [autoload]
 
 MissKellyDeclaration="*res://dialogs/Miss_Kelly_Declaration.gd"
 SaveSystem="*res://components/save/SaveSystem.gd"
 Sfx="*res://components/ui/Sfx.gd"
+Reactions="*res://dialogs/Reactions.gd"
 
 [display]
 

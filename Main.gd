@@ -9,3 +9,6 @@ func _on_TutorialDialog_on_ended():
 
 func _on_HUD_exit_requested():
 	$OneInfiniteMechanic.quit_to_title()
+
+func _on_OneInfiniteMechanic_reaction(likeness):
+	$DialogueSystem.show_reaction(likeness)

@@ -3,6 +3,7 @@ extends Node
 signal completed(gains)
 signal turn_ended(gains)
 signal turn_time_changed(remaining)
+signal reaction(likeness)
 
 export var base_price: int = 5
 export var lose_price: int = 15
@@ -114,6 +115,7 @@ func _on_Dye_completed(likeness):
 		won(likeness)
 		_grant_time_bonus(likeness)
 	SaveSystem.submit_score(SaveSystem.get_player_name(), gains)
+	emit_signal("reaction", likeness)
 	emit_signal("completed", gains)
 	timer.start()
 

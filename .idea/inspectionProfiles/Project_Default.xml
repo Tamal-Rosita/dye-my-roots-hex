@@ -2,7 +2,7 @@
   <profile version="1.0">
     <option name="myName" value="Project Default" />
     <inspection_tool class="GdStringNameMemberUsage" enabled="true" level="WARNING" enabled_by_default="false">
-      <scope name="Project Files" level="INFORMATION" enabled="true" editorAttributes="INFORMATION_ATTRIBUTES" />
+      <scope name="Project Files" level="INFORMATION" enabled="false" editorAttributes="INFORMATION_ATTRIBUTES" />
     </inspection_tool>
   </profile>
 </component>

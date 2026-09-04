@@ -20,11 +20,9 @@ anchor_mode = 0
 current = true
 
 [node name="Environment" type="Sprite" parent="."]
-position = Vector2( 512, 254 )
-scale = Vector2( 3.96875, 3.96875 )
+position = Vector2( 521.5, 300 )
+scale = Vector2( 4.66016, 4.6875 )
 texture = ExtResource( 1 )
-
-[node name="HUD" parent="." instance=ExtResource( 2 )]
 
 [node name="OneInfiniteMechanic" parent="." instance=ExtResource( 6 )]
 position = Vector2( 514, 497 )
@@ -32,12 +30,15 @@ base_price = 3
 price_multiplier = 0.25
 turn_time = 90.0
 
+[node name="HUD" parent="." instance=ExtResource( 2 )]
+
 [node name="DialogueSystem" parent="." instance=ExtResource( 3 )]
 
 [node name="GameOver" parent="." instance=ExtResource( 7 )]
 
-[connection signal="exit_requested" from="HUD" to="." method="_on_HUD_exit_requested"]
 [connection signal="completed" from="OneInfiniteMechanic" to="HUD" method="_on_OneInfiniteMechanic_completed"]
+[connection signal="reaction" from="OneInfiniteMechanic" to="." method="_on_OneInfiniteMechanic_reaction"]
 [connection signal="turn_ended" from="OneInfiniteMechanic" to="GameOver" method="_on_OneInfiniteMechanic_turn_ended"]
 [connection signal="turn_time_changed" from="OneInfiniteMechanic" to="HUD" method="_on_OneInfiniteMechanic_turn_time_changed"]
+[connection signal="exit_requested" from="HUD" to="." method="_on_HUD_exit_requested"]
 [connection signal="on_ended" from="DialogueSystem" to="." method="_on_TutorialDialog_on_ended"]

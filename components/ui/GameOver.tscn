@@ -1,7 +1,24 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://themes/pixel_theme.tres" type="Theme" id=1]
 [ext_resource path="res://components/ui/GameOver.gd" type="Script" id=2]
+[ext_resource path="res://fonts/rainyhearts.ttf" type="DynamicFontData" id=3]
+
+[sub_resource type="DynamicFont" id=2]
+size = 52
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 34
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 20
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 26
+font_data = ExtResource( 3 )
 
 [node name="GameOver" type="Control"]
 visible = false
@@ -12,45 +29,61 @@ script = ExtResource( 2 )
 [node name="Backdrop" type="ColorRect" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-color = Color( 0, 0, 0, 0.72 )
+color = Color( 0, 0, 0, 0.74 )
 
-[node name="Title" type="Label" parent="."]
+[node name="Title" type="RichTextLabel" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -200.0
-margin_top = -110.0
-margin_right = 200.0
-margin_bottom = -60.0
-theme = ExtResource( 1 )
-text = "TIME'S UP!"
-align = 1
-valign = 1
+margin_left = -300.0
+margin_top = -170.0
+margin_right = 300.0
+margin_bottom = -110.0
+custom_fonts/normal_font = SubResource( 2 )
+bbcode_enabled = true
+bbcode_text = "[center][wave amp=18 freq=2][rainbow freq=0.5 sat=0.7 val=1]TIME'S UP![/rainbow][/wave][/center]"
+scroll_active = false
 
-[node name="FinalGains" type="Label" parent="."]
+[node name="FinalGains" type="RichTextLabel" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -200.0
-margin_top = -30.0
-margin_right = 200.0
+margin_left = -300.0
+margin_top = -100.0
+margin_right = 300.0
 margin_bottom = 20.0
-theme = ExtResource( 1 )
-text = "You earned $0.00"
-align = 1
-valign = 1
+custom_fonts/normal_font = SubResource( 3 )
+bbcode_enabled = true
+bbcode_text = "[center]You earned\n[color=#ffd166]$0.00[/color][/center]"
+scroll_active = false
 
-[node name="Hint" type="Label" parent="."]
+[node name="SubCaption" type="RichTextLabel" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -300.0
+margin_top = 30.0
+margin_right = 300.0
+margin_bottom = 66.0
+custom_colors/default_color = Color( 0.86, 0.8, 0.9, 1 )
+custom_fonts/normal_font = SubResource( 4 )
+bbcode_enabled = true
+bbcode_text = "[center]Your earnings were added to the leaderboard.[/center]"
+scroll_active = false
+
+[node name="Hint" type="RichTextLabel" parent="."]
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-margin_left = -200.0
-margin_top = -120.0
-margin_right = 200.0
+margin_left = -250.0
+margin_top = -130.0
+margin_right = 250.0
 margin_bottom = -80.0
-theme = ExtResource( 1 )
-text = "PRESS A TO CONTINUE"
-align = 1
+custom_fonts/normal_font = SubResource( 5 )
+bbcode_enabled = true
+bbcode_text = "[center][color=#e2b3d5][wave amp=9 freq=3]PRESS A TO CONTINUE[/wave][/color][/center]"
+scroll_active = false

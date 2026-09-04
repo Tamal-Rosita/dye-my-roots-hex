@@ -11,6 +11,13 @@ var input_enabled: bool = true
 func set_input_enabled(value: bool):
 	input_enabled = value
 
+func _ready():
+	# Append the running version (from Project Settings) to the credits text.
+	var version: String = str(ProjectSettings.get_setting("application/config/version"))
+	if version == "" or version == "null":
+		version = "dev"
+	$CreditsText.bbcode_text += "\n\n[center]v" + version + "[/center]"
+
 func _process(_delta):
 	if not is_visible_in_tree() or not input_enabled:
 		return

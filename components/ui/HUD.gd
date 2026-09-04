@@ -12,8 +12,8 @@ var exit_hold: float = 0.0
 var exit_fired: bool = false
 
 func _ready():
-	$Gains.text = "$0"
-	$Time.text = "TIME --"
+	$Panel/Gains.text = "$0"
+	$Panel/Time.text = "TIME --"
 	$ExitHold.set_label("HOLD\nTO EXIT")
 
 # The main scene enables this once the intro dialogue has ended, so holding
@@ -25,10 +25,10 @@ func set_can_exit(value: bool):
 		exit_fired = false
 
 func set_money(amount):
-	$Gains.text = "$%s" % amount
+	$Panel/Gains.text = "$%s" % amount
 
 func set_time(remaining):
-	$Time.text = "TIME %d" % int(ceil(remaining))
+	$Panel/Time.text = "TIME %d" % int(ceil(remaining))
 
 func _on_OneInfiniteMechanic_completed(gains):
 	set_money(gains)
