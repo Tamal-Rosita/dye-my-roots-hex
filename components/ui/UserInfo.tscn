@@ -21,18 +21,18 @@ margin_bottom = -2.0
 theme = ExtResource( 1 )
 script = ExtResource( 2 )
 
-[node name="UserNameLabel" type="Label" parent="."]
+[node name="UserNameLabel" type="RichTextLabel" parent="."]
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 margin_left = -96.5
-margin_top = 40.0
+margin_top = 36.0
 margin_right = 96.5
-margin_bottom = 69.0
-text = "Enter your name:"
-align = 1
-valign = 1
+margin_bottom = 73.0
+bbcode_enabled = true
+bbcode_text = "[center][rainbow freq=0.35 sat=0.45 val=1.15]Enter your name:[/rainbow][/center]"
+scroll_active = false
 
 [node name="NameRoller" parent="." instance=ExtResource( 3 )]
 anchor_left = 0.5
@@ -63,6 +63,7 @@ margin_left = -212.0
 margin_top = -104.0
 margin_right = 208.0
 margin_bottom = -51.0
+custom_colors/font_color = Color( 0.76, 0.7, 0.92, 1 )
 custom_fonts/font = SubResource( 1 )
 text = "LEFT/RIGHT: move   UP/DOWN: change   ENTER/A: confirm"
 align = 1

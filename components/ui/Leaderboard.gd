@@ -10,7 +10,8 @@ extends Panel
 export(int) var max_entries: int = 8
 
 const HIGHLIGHT: String = "#ffd166"
-const NORMAL: String = "#e8e0f0"
+const GOLD: String = "#ffd166"
+const NORMAL: String = "#cfc4ea"
 
 func _ready():
 	refresh()
@@ -27,7 +28,7 @@ func refresh():
 		var color: String = HIGHLIGHT if is_me else NORMAL
 		var marker: String = "> " if is_me else "  "
 		names.append("[color=%s]%s%d.  %s[/color]" % [color, marker, i + 1, entry["name"]])
-		amounts.append("[color=%s][right]$%.2f[/right][/color]" % [color, float(entry["score"])])
+		amounts.append("[color=%s][right]$%.2f[/right][/color]" % [GOLD, float(entry["score"])])
 	var names_text: String = ""
 	var amounts_text: String = ""
 	if count == 0:

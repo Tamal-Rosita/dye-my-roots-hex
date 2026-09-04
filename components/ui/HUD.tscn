@@ -45,6 +45,7 @@ margin_top = 10.0
 margin_right = -14.0
 margin_bottom = 40.0
 theme = ExtResource( 2 )
+custom_colors/font_color = Color( 1, 0.8196, 0.4, 1 )
 text = "$0"
 align = 2
 
@@ -56,6 +57,7 @@ margin_top = 46.0
 margin_right = -14.0
 margin_bottom = 76.0
 theme = ExtResource( 2 )
+custom_colors/font_color = Color( 0.86, 0.79, 0.98, 1 )
 text = "TIME --"
 align = 2
 

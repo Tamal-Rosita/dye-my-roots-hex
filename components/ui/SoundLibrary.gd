@@ -57,8 +57,8 @@ const FILE_TRACKS: Array = [
 	}
 ]
 
-export(Color) var selected_color: Color = Color(0.886, 0.702, 0.835)
-export(Color) var normal_color: Color = Color(0.9, 0.9, 0.9, 0.85)
+export(Color) var selected_color: Color = Color(1, 0.8196, 0.4)
+export(Color) var normal_color: Color = Color(0.6, 0.56, 0.72, 0.9)
 export(float) var row_height: float = 26.0
 
 var entries: Array = []
@@ -90,15 +90,17 @@ func _build_entries():
 	var sfx_names: Array = Sfx.sounds.keys()
 	sfx_names.sort()
 	var row_font: DynamicFont = _make_font(20)
-	$LeftPanel/LeftTitle.add_font_override("font", row_font)
+	$LeftPanel/LeftTitle.add_font_override("normal_font", row_font)
 	for name in sfx_names:
 		entries.append({"kind": "sfx", "name": name, "label": "SFX  " + name})
 	for track in FILE_TRACKS:
 		entries.append({"kind": "file", "name": track["name"], "path": track["path"], "meta": track, "label": "FILE " + track["name"]})
 	var list: VBoxContainer = $LeftPanel/Scroll/ListVBox
 	for i in range(entries.size()):
-		var label: Label = Label.new()
-		label.add_font_override("font", row_font)
+		var label: RichTextLabel = RichTextLabel.new()
+		label.bbcode_enabled = true
+		label.scroll_active = false
+		label.add_font_override("normal_font", row_font)
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		label.rect_min_size = Vector2(0, row_height)
 		list.add_child(label)
@@ -106,10 +108,13 @@ func _build_entries():
 
 func _refresh_list():
 	for i in range(labels.size()):
-		var label: Label = labels[i]
-		var marker: String = "> " if i == selected else "  "
-		label.text = marker + entries[i]["label"]
-		label.add_color_override("font_color", selected_color if i == selected else normal_color)
+		var label: RichTextLabel = labels[i]
+		if i == selected:
+			var c: String = selected_color.to_html(false)
+			label.bbcode_text = "[color=%s]> %s[/color]" % [c, entries[i]["label"]]
+		else:
+			var c: String = normal_color.to_html(false)
+			label.bbcode_text = "[color=%s]  %s[/color]" % [c, entries[i]["label"]]
 
 # Keeps the highlighted row in sight: auto-scrolls the list when the
 # selection moves out of the visible area (gamepad/keyboard navigation).
@@ -122,29 +127,29 @@ func _ensure_selection_visible():
 func _update_details():
 	var entry: Dictionary = entries[selected]
 	if entry["kind"] == "sfx":
-		$RightPanel/NameLabel.text = "SFX: " + entry["name"]
+		$RightPanel/NameLabel.bbcode_text = "[color=#ffd166]SFX: %s[/color]" % entry["name"]
 		$RightPanel/TypeLabel.text = "Procedural sound  -  Sfx.play(\"%s\")" % entry["name"]
 		var tones: Array = Sfx.sounds[entry["name"]]
 		var parts: Array = []
 		for tone in tones:
-			parts.append("%d Hz, %d ms" % [int(tone[0]), int(tone[1] * 1000.0)])
+			parts.append("[color=#f4ebff]%d Hz, %d ms[/color]" % [int(tone[0]), int(tone[1] * 1000.0)])
 		var tones_text: String = ""
 		for i in range(parts.size()):
 			if i > 0:
 				tones_text += "\n"
 			tones_text += parts[i]
-		$RightPanel/MetaLabel.text = ("Tones:\n" if parts.size() > 1 else "Tone:\n") + tones_text
+		$RightPanel/MetaLabel.bbcode_text = ("[color=#e2b3d5]Tones:[/color]\n" if parts.size() > 1 else "[color=#e2b3d5]Tone:[/color]\n") + tones_text
 	else:
 		var m: Dictionary = entry["meta"]
-		$RightPanel/NameLabel.text = m["title"]
+		$RightPanel/NameLabel.bbcode_text = "[color=#ffd166]%s[/color]" % m["title"]
 		$RightPanel/TypeLabel.text = "Audio file track"
-		var meta: String = "Used for: " + m["used"]
-		meta += "\nArtist: " + m["artist"]
+		var meta: String = "[color=#e2b3d5]Used for:[/color] [color=#f4ebff]" + m["used"] + "[/color]"
+		meta += "\n[color=#e2b3d5]Artist:[/color] [color=#f4ebff]" + m["artist"] + "[/color]"
 		if m["album"] != "":
-			meta += "\nAlbum: " + m["album"]
+			meta += "\n[color=#e2b3d5]Album:[/color] [color=#f4ebff]" + m["album"] + "[/color]"
 		if m["source"] != "":
-			meta += "\nSource: " + m["source"]
-		$RightPanel/MetaLabel.text = meta
+			meta += "\n[color=#e2b3d5]Source:[/color] [color=#f4ebff]" + m["source"] + "[/color]"
+		$RightPanel/MetaLabel.bbcode_text = meta
 
 func _process(_delta):
 	if not is_visible_in_tree() or not input_enabled:
