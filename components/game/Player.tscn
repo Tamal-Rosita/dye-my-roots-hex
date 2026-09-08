@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://components/game/Player.gd" type="Script" id=1]
 [ext_resource path="res://sprites/basics/white-circle-black-outline-4.png" type="Texture" id=3]
@@ -7,6 +7,14 @@
 [ext_resource path="res://sprites/basics/64-white_circle.png" type="Texture" id=7]
 [ext_resource path="res://sprites/basics/cloud-32.png" type="Texture" id=10]
 [ext_resource path="res://components/ui/CharRoller.tscn" type="PackedScene" id=11]
+[ext_resource path="res://fonts/rainyhearts.ttf" type="DynamicFontData" id=12]
+
+[sub_resource type="DynamicFont" id=1]
+size = 32
+outline_size = 2
+outline_color = Color( 0.482353, 0.105882, 0.466667, 1 )
+use_filter = true
+font_data = ExtResource( 12 )
 
 [node name="Player" type="Node2D"]
 script = ExtResource( 1 )
@@ -52,6 +60,19 @@ selected_bg = Color( 0.992157, 0.498039, 0.847059, 0.756863 )
 selected_text = Color( 1, 0.913725, 0.709804, 0.94902 )
 selected_border = Color( 0.937255, 0.972549, 0.529412, 0.705882 )
 dim_text = Color( 0.286275, 0.756863, 0.964706, 1 )
+
+[node name="NextPrompt" type="Label" parent="Cloud"]
+margin_left = -32.0
+margin_top = 16.0
+margin_right = 88.0
+margin_bottom = 116.0
+rect_scale = Vector2( 0.25, 0.25 )
+custom_colors/font_color = Color( 1, 0.913725, 0.709804, 1 )
+custom_fonts/font = SubResource( 1 )
+text = "A: NEXT customer"
+align = 1
+valign = 1
+autowrap = true
 
 [connection signal="confirmed" from="Cloud/HexRoller" to="." method="_on_HexRoller_confirmed"]
 [connection signal="value_changed" from="Cloud/HexRoller" to="." method="_on_HexRoller_value_changed"]

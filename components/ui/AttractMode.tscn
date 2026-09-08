@@ -28,7 +28,7 @@ margin_top = -240.0
 margin_right = 300.0
 margin_bottom = 240.0
 
-[node name="Hint" type="Label" parent="."]
+[node name="Hint" type="RichTextLabel" parent="."]
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
@@ -37,6 +37,7 @@ margin_left = -250.0
 margin_top = -110.0
 margin_right = 250.0
 margin_bottom = -60.0
-custom_fonts/font = SubResource( 1 )
-text = "PRESS ANY BUTTON TO START"
-align = 1
+custom_fonts/normal_font = SubResource( 1 )
+bbcode_enabled = true
+bbcode_text = "[center][color=#ffd166][wave amp=6 freq=2.2]PRESS ANY BUTTON TO START[/wave][/color][/center]"
+scroll_active = false

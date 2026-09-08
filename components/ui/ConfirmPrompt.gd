@@ -14,7 +14,7 @@ func set_input_enabled(value: bool):
 	input_enabled = value
 
 func _ready():
-	$Panel/MessageLabel.text = prompt_text
+	$Panel/MessageLabel.bbcode_text = "[center][color=#f6e7f5]%s[/color][/center]" % prompt_text
 
 func open():
 	visible = true

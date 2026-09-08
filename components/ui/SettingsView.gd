@@ -14,8 +14,8 @@ const ROWS: Array = [
 	{"label": "MUSIC", "key": "music"}
 ]
 
-export(Color) var selected_color: Color = Color(0.886, 0.702, 0.835)
-export(Color) var normal_color: Color = Color(0.9, 0.9, 0.9)
+export(Color) var selected_color: Color = Color(1, 0.8196, 0.4)
+export(Color) var normal_color: Color = Color(0.78, 0.71, 0.93)
 export(float) var row_height: float = 52.0
 export(int) var step_percent: int = 5
 
@@ -32,9 +32,9 @@ func _ready():
 
 func _build_labels():
 	for i in range(ROWS.size()):
-		var label: Label = Label.new()
-		label.align = Label.ALIGN_CENTER
-		label.valign = Label.VALIGN_CENTER
+		var label: RichTextLabel = RichTextLabel.new()
+		label.bbcode_enabled = true
+		label.scroll_active = false
 		label.anchor_left = 0.0
 		label.anchor_right = 1.0
 		label.margin_top = i * row_height
@@ -46,9 +46,12 @@ func _refresh():
 	for i in range(labels.size()):
 		var row: Dictionary = ROWS[i]
 		var percent: int = int(round(SaveSystem.get_setting(row["key"]) * 100.0))
-		var marker: String = "> " if i == selected else "  "
-		labels[i].text = "%s%s  %d%%" % [marker, row["label"], percent]
-		labels[i].add_color_override("font_color", selected_color if i == selected else normal_color)
+		if i == selected:
+			var c: String = selected_color.to_html(false)
+			labels[i].bbcode_text = "[center][color=%s][wave amp=4 freq=2.5]> %s  %d%% <[/wave][/color][/center]" % [c, row["label"], percent]
+		else:
+			var c: String = normal_color.to_html(false)
+			labels[i].bbcode_text = "[center][color=%s]%s  %d%%[/color][/center]" % [c, row["label"], percent]
 
 func _process(_delta):
 	if not is_visible_in_tree() or not input_enabled:

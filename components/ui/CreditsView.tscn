@@ -28,26 +28,26 @@ margin_right = 300.0
 margin_bottom = 180.0
 custom_fonts/normal_font = SubResource( 1 )
 bbcode_enabled = true
-bbcode_text = "[center]CREDITS
+bbcode_text = "[center][rainbow freq=0.3 sat=0.6 val=1.15]CREDITS[/rainbow]
 
-Game Design / 2D Art
-Sakbe Corona
+[color=#e2b3d5]GAME DESIGN / 2D ART[/color]
+[color=#f8f0ff]Sakbe Corona[/color]
 
-Programming
-Jaime Hernandez
+[color=#e2b3d5]PROGRAMMING[/color]
+[color=#f8f0ff]Jaime Hernandez[/color]
 
-Made with Godot 3.5
+[color=#f8f0ff]Made with [/color] [color=#9fd8ff]Godot v3.5[/color] 
 
-Global Game Jawn 2023[/center]"
+[color=#9fe8b0]Global Game Jawn 2023[/color][/center]"
 text = "CREDITS
 
-Game Design / 2D Art
+GAME DESIGN / 2D ART
 Sakbe Corona
 
-Programming
+PROGRAMMING
 Jaime Hernandez
 
-Made with Godot 3.5
+Made with  Godot v3.5 
 
 Global Game Jawn 2023"
 scroll_active = false
@@ -61,6 +61,7 @@ margin_left = -200.0
 margin_top = -70.0
 margin_right = 200.0
 margin_bottom = -30.0
+custom_colors/font_color = Color( 0.886, 0.702, 0.835, 1 )
 custom_fonts/font = SubResource( 1 )
 text = "PRESS ANY BUTTON TO GO BACK"
 align = 1

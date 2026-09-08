@@ -7,8 +7,8 @@ signal cancelled
 # activate. Options are shown as labels; the selected one is highlighted.
 
 export(Array, String) var options: Array = ["Start Game", "High Scores", "Credits", "Extras"]
-export(Color) var selected_color: Color = Color(0.886, 0.702, 0.835)
-export(Color) var normal_color: Color = Color(0.9, 0.9, 0.9)
+export(Color) var selected_color: Color = Color(1, 0.8196, 0.4)
+export(Color) var normal_color: Color = Color(0.82, 0.75, 0.95)
 export(float) var row_height: float = 56.0
 
 var selected: int = 0
@@ -24,9 +24,9 @@ func set_input_enabled(value: bool):
 
 func _build_labels():
 	for i in range(options.size()):
-		var label: Label = Label.new()
-		label.align = Label.ALIGN_CENTER
-		label.valign = Label.VALIGN_CENTER
+		var label: RichTextLabel = RichTextLabel.new()
+		label.bbcode_enabled = true
+		label.scroll_active = false
 		label.anchor_left = 0.0
 		label.anchor_right = 1.0
 		label.margin_top = i * row_height
@@ -39,13 +39,12 @@ func _build_labels():
 
 func _refresh():
 	for i in range(labels.size()):
-		var label: Label = labels[i]
+		var label: RichTextLabel = labels[i]
+		var c: String = (selected_color if i == selected else normal_color).to_html(false)
 		if i == selected:
-			label.add_color_override("font_color", selected_color)
-			label.text = "> " + options[i] + " <"
+			label.bbcode_text = "[center][color=%s][wave amp=4 freq=2.5]> %s <[/wave][/color][/center]" % [c, options[i]]
 		else:
-			label.add_color_override("font_color", normal_color)
-			label.text = "  " + options[i]
+			label.bbcode_text = "[center][color=%s]%s[/color][/center]" % [c, options[i]]
 
 func _process(_delta):
 	if not is_visible_in_tree() or not input_enabled:

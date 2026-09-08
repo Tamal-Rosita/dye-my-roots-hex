@@ -16,7 +16,7 @@ func _ready():
 	var version: String = str(ProjectSettings.get_setting("application/config/version"))
 	if version == "" or version == "null":
 		version = "dev"
-	$CreditsText.bbcode_text += "\n\n[center]v" + version + "[/center]"
+	$CreditsText.bbcode_text += "\n\n[center][color=#e2b3d5]v" + version + "[/color][/center]"
 
 func _process(_delta):
 	if not is_visible_in_tree() or not input_enabled:

@@ -23,16 +23,14 @@ export var speed_bonus_max: float = 8.0
 export var turn_warning_seconds: float = 5.0
 
 var gains: float = 0
-var timer: Timer = Timer.new()       # short delay between rounds
 var turn_timer: Timer = Timer.new()  # session countdown
 var turn_over: bool = false
 var last_warning_second: int = -1
+# After a guess the round is closed: the result and Ms Kelly's reaction are
+# shown and the roller is locked until the player presses A ("next customer").
+var awaiting_next: bool = false
 
 func _ready():
-	timer.connect("timeout", self, "on_timeout")
-	timer.wait_time = 0.88
-	timer.one_shot = true
-	add_child(timer)
 	turn_timer.connect("timeout", self, "_on_turn_timeout")
 	turn_timer.one_shot = true
 	add_child(turn_timer)
@@ -42,9 +40,11 @@ func _ready():
 func start_turn():
 	gains = 0
 	turn_over = false
+	awaiting_next = false
 	turn_timer.wait_time = turn_time
 	turn_timer.start()
 	reset()
+	$Player.set_input_enabled(true)
 
 func reset():
 	$Dye.reset()
@@ -61,7 +61,7 @@ func won(likeness):
 	$WinSFXPlayer.play_all()
 	print("Dollars earned: %.02f" % price)
 
-func _process(_delta):
+func _process(delta):
 	if turn_over or turn_timer.is_stopped():
 		last_warning_second = -1
 		return
@@ -75,11 +75,10 @@ func _process(_delta):
 			Sfx.play("turn_warning")
 	else:
 		last_warning_second = -1
-
-func on_timeout():
-	if turn_over:
-		return
-	reset()
+	# After a guess, wait for an explicit A press before the next round starts,
+	# so the player can read the result and Ms Kelly's reaction safely.
+	if awaiting_next and Input.is_action_just_pressed("ui_accept"):
+		_advance_after_guess()
 
 func _on_turn_timeout():
 	end_turn()
@@ -97,6 +96,7 @@ func end_turn():
 		return
 	turn_over = true
 	$Dye.stop()
+	$Player.set_input_enabled(false)
 	SaveSystem.submit_score(SaveSystem.get_player_name(), gains)
 	emit_signal("turn_ended", gains)
 
@@ -117,10 +117,25 @@ func _on_Dye_completed(likeness):
 	SaveSystem.submit_score(SaveSystem.get_player_name(), gains)
 	emit_signal("reaction", likeness)
 	emit_signal("completed", gains)
-	timer.start()
+	_await_next()
 
 func _on_Player_submit(color):
 	$Dye.submit(color)
+
+# Closes the round: locks the roller (so a stray A cannot submit a color while
+# the result/reaction is on screen) and asks for an explicit "next" press.
+func _await_next():
+	awaiting_next = true
+	$Player.set_input_enabled(false)
+	$Player.show_next_prompt()
+
+func _advance_after_guess():
+	awaiting_next = false
+	$Player.hide_next_prompt()
+	reset()
+	# Re-enable the roller only on the next frame, so the A press that
+	# confirmed "next customer" cannot also submit the fresh white guess.
+	$Player.call_deferred("set_input_enabled", true)
 
 # Good and/or fast guesses add time to the turn clock.
 func _grant_time_bonus(likeness):

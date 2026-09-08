@@ -12,3 +12,4 @@ func _on_HUD_exit_requested():
 
 func _on_OneInfiniteMechanic_reaction(likeness):
 	$DialogueSystem.show_reaction(likeness)
+

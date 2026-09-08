@@ -25,15 +25,16 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color( 0, 0, 0, 0.78 )
 
-[node name="Title" type="Label" parent="."]
+[node name="Title" type="RichTextLabel" parent="."]
 anchor_right = 1.0
 margin_left = 20.0
 margin_top = 14.0
 margin_right = -20.0
 margin_bottom = 52.0
-custom_fonts/font = SubResource( 2 )
-text = "SOUND TEST   -   UP/DOWN: BROWSE   A: PLAY   B: BACK"
-align = 1
+custom_fonts/normal_font = SubResource( 2 )
+bbcode_enabled = true
+bbcode_text = "[center][rainbow freq=0.3 sat=0.5 val=1.1]SOUND TEST[/rainbow]   [color=#cfc4ea]- UP/DOWN: BROWSE   A: PLAY   B: BACK -[/color][/center]"
+scroll_active = false
 
 [node name="LeftPanel" type="Panel" parent="."]
 margin_left = 24.0
@@ -41,13 +42,15 @@ margin_top = 64.0
 margin_right = 464.0
 margin_bottom = 556.0
 
-[node name="LeftTitle" type="Label" parent="LeftPanel"]
+[node name="LeftTitle" type="RichTextLabel" parent="LeftPanel"]
 anchor_right = 1.0
 margin_left = 16.0
 margin_top = 12.0
 margin_right = -16.0
 margin_bottom = 42.0
-text = "SFX + TRACKS"
+bbcode_enabled = true
+bbcode_text = "[center][color=#e2b3d5]SFX + TRACKS[/color][/center]"
+scroll_active = false
 
 [node name="Scroll" type="ScrollContainer" parent="LeftPanel"]
 anchor_right = 1.0
@@ -69,15 +72,16 @@ margin_top = 64.0
 margin_right = 1000.0
 margin_bottom = 556.0
 
-[node name="NameLabel" type="Label" parent="RightPanel"]
+[node name="NameLabel" type="RichTextLabel" parent="RightPanel"]
 anchor_right = 1.0
 margin_left = 18.0
 margin_top = 16.0
 margin_right = -18.0
 margin_bottom = 66.0
-custom_fonts/font = SubResource( 3 )
-text = "-"
-autowrap = true
+custom_fonts/normal_font = SubResource( 3 )
+bbcode_enabled = true
+bbcode_text = "[color=#ffd166]-[/color]"
+scroll_active = false
 
 [node name="TypeLabel" type="Label" parent="RightPanel"]
 anchor_right = 1.0
@@ -86,6 +90,7 @@ margin_top = 70.0
 margin_right = -18.0
 margin_bottom = 106.0
 custom_fonts/font = SubResource( 4 )
+custom_colors/font_color = Color( 0.74, 0.68, 0.9, 1 )
 
 [node name="MetaLabel" type="RichTextLabel" parent="RightPanel"]
 anchor_right = 1.0
